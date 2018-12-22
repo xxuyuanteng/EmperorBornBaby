@@ -176,6 +176,16 @@ cc.Class({
         }
     },
 
+    onClickBuild:function(event, customData) {
+        for(var i = 1;i <= 10;i++){
+            if(customData == ("build_" + i)){
+                console.log("建造:" + Utils.ArmyInfoConnfigs[i].name);
+                this.mDialogBuildLayer.active = true;
+                this.updateDailogBuildLayerUI(i);
+            }
+        }
+    },
+
     onClickBtn:function(event, customData) {
         if(customData == "start"){
             this.mStartLayer.active = false;
@@ -193,19 +203,10 @@ cc.Class({
             this.mDialogBuildLayer.active = false;
         }else if(customData == "closeDialog"){
             this.mDialogBuildLayer.active = false;
-        }else{
-            for(var i = 1;i <= 10;i++){
-                if(customData == ("build_" + i)){
-                    console.log("建造:" + Utils.ArmyInfoConnfigs[i].name);
-                    // Utils.mSelecteArmyType = i;
-                    this.mDialogBuildLayer.active = true;
-                    this.updateDailogLayerUI(i);
-                }
-            }
         }
     },
 
-    updateDailogLayerUI:function(index){
+    updateDailogBuildLayerUI:function(index){
         this.mArmyNameLabel.getComponent(cc.Label).string = Utils.ArmyInfoConnfigs[index].name;
         this.mArmyAttack.getComponent(cc.Label).string = "攻击力: " + Utils.ArmyInfoConnfigs[index].attack[0];
         this.mArmyCount.getComponent(cc.Label).string = "容量: " + Utils.ArmyInfoConnfigs[index].count[0];
