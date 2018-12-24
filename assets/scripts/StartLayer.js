@@ -115,6 +115,8 @@ cc.Class({
             contentNode.setPosition(-70, -40);
             itemNode.addChild(contentNode);
         }
+
+        this.dialogUpgradeLayer = this.mDialogUpgradeLayer.getComponent("DialogUpgradeLayer");
     },
 
     start () {
@@ -163,6 +165,7 @@ cc.Class({
             if(customData == ("upgrade_" + i)){
                 console.log("升级:" + Utils.ArmyInfoConnfigs[i].name);
                 this.mDialogUpgradeLayer.active = true;
+                this.dialogUpgradeLayer.updateUpgradeLayerUI(Utils.ArmyInfoConnfigs[i]);
             }
         }
     },
