@@ -24,6 +24,8 @@ cc.Class({
         mArmyAttack: cc.Node,
         mArmyCount: cc.Node,
         mArmyCost: cc.Node,
+
+        mArmyScrollviewLayer: cc.Node,     //军队列表
         
         mDialogTrainLayer: cc.Node,     //训练兵种对话框
 
@@ -35,6 +37,36 @@ cc.Class({
     },
 
     initDataInfo:function(){
+        for(var i = 0; i < 10;i++){
+           var armyLevel = Utils.getDataFromStorage("armyType_" + i);
+           if(armyLevel == "" || armyLevel == null){
+               if(i == 0){
+                    Utils.saveDataToStorage("armyType_" + i, 0);
+               }else{
+                    Utils.saveDataToStorage("armyType_" + i, -1);
+               }
+           }
+        }
+        
+        var armyListInfo = this.mArmyScrollviewLayer.getChildByName("view").getChildByName("content").getChildren();
+        console.log("armyListInfo:", armyListInfo.length);
+        for(var i = 0; i < armyListInfo.length;i++){
+            var armyLevel = Utils.getDataFromStorage("armyType_" + i);
+            console.log("armyLevel:", armyLevel);
+            if(armyLevel >= 0){
+                if(armyListInfo[i].getChildByName("UpgradeNode")){
+                    armyListInfo[i].getChildByName("UpgradeNode").active = true;
+                }
+                if(armyListInfo[i].getChildByName("BtnBuild")){
+                    armyListInfo[i].getChildByName("BtnBuild").active = false;
+                }
+            }else{
+                if(armyListInfo[i].getChildByName("UpgradeNode")){
+                    armyListInfo[i].getChildByName("UpgradeNode").active = false;
+                }
+            }
+        }
+
         var levelCount = Utils.LevelNames.length;
         this.currentBigLevel = 0;
         console.log("关卡数量:", levelCount);
@@ -123,6 +155,28 @@ cc.Class({
 
     },
 
+    //更新兵种
+    updateArmyListInfo:function(){
+        var armyListInfo = this.mArmyScrollviewLayer.getChildByName("view").getChildByName("content").getChildren();
+        console.log("armyListInfo:", armyListInfo);
+        for(var i = 0; i < armyListInfo.length;i++){
+            var armyLevel = Utils.getDataFromStorage("armyType_" + i);
+            console.log("armyLevel:", armyLevel);
+            if(armyLevel >= 0){
+                if(armyListInfo[i].getChildByName("UpgradeNode")){
+                    armyListInfo[i].getChildByName("UpgradeNode").active = true;
+                }
+                if(armyListInfo[i].getChildByName("BtnBuild")){
+                    armyListInfo[i].getChildByName("BtnBuild").active = false;
+                }
+            }else{
+                if(armyListInfo[i].getChildByName("UpgradeNode")){
+                    armyListInfo[i].getChildByName("UpgradeNode").active = false;
+                }
+            }
+        }
+    },
+
     touchWarsItem:function(event, customData){
         // console.log("touchItem...index:" + event.target['_name']);
         var index = event.target['_name'];
@@ -204,6 +258,7 @@ cc.Class({
         }else if(customData == "buildSuccess"){
             console.log("建造成功...");
             this.mDialogBuildLayer.active = false;
+            this.updateArmyListInfo();
         }else if(customData == "closeDialog"){
             this.mDialogBuildLayer.active = false;
         }
@@ -213,7 +268,10 @@ cc.Class({
         this.mArmyNameLabel.getComponent(cc.Label).string = Utils.ArmyInfoConnfigs[index].name;
         this.mArmyAttack.getComponent(cc.Label).string = "攻击力: " + Utils.ArmyInfoConnfigs[index].attack[0];
         this.mArmyCount.getComponent(cc.Label).string = "容量: " + Utils.ArmyInfoConnfigs[index].count[0];
-        this.mArmyCost.getComponent(cc.Label).string = "消耗: " + Utils.ArmyInfoConnfigs[index].cost[0];
+        this.mArmyCost.getChildByName("CostType_1").getChildByName("CostLabel").getComponent(cc.Label).string = "x" + Utils.ArmyInfoConnfigs[index].cost[0][0];
+        this.mArmyCost.getChildByName("CostType_2").getChildByName("CostLabel").getComponent(cc.Label).string = "x" + Utils.ArmyInfoConnfigs[index].cost[0][1];
+        this.mArmyCost.getChildByName("CostType_3").getChildByName("CostLabel").getComponent(cc.Label).string = "x" + Utils.ArmyInfoConnfigs[index].cost[0][2];
+
     },
 
     showFunLayerActive:function(index) {
